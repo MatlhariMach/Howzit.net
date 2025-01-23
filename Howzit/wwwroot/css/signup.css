@@ -1,0 +1,100 @@
+﻿/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+/* Container */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #85e3c9; /* Mint green background */
+}
+
+/* Signup Box */
+.signup-box {
+    background: #ffffff; /* White background for the signup box */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 400px;
+}
+
+/* Welcome Text */
+.welcome-text {
+    color: #444444;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Logo */
+.logo img {
+    width: 80px; /* Adjust size as needed */
+    height: auto;
+    margin-bottom: 20px;
+}
+
+/* Form Styles */
+.signup-form .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.signup-form label {
+    display: block;
+    font-size: 14px;
+    color: #333333;
+    margin-bottom: 5px;
+}
+
+.signup-form input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+    .signup-form input:focus {
+        border-color: #85e3c9; /* Mint green border on focus */
+    }
+
+/* Sign Up Button */
+.sign-up-button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: white;
+    background-color: #85e3c9; /* Mint green */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .sign-up-button:hover {
+        background-color: #66c3a7; /* Slightly darker mint green */
+    }
+
+/* Login Redirect Text */
+.login-text {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #777777;
+}
+
+    .login-text .login-link {
+        color: #85e3c9; /* Mint green */
+        text-decoration: none;
+    }
+
+        .login-text .login-link:hover {
+            text-decoration: underline;
+        }

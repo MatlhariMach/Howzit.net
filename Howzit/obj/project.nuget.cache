@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "1yWLA8wO9vBM3pOOgcvby6Nij2ub5m912272up2JEe0p5buRn2c3fQsT30EbAvOxKqZPd7EgSFtFLkePer+lLw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\27738\\source\\repos\\Howzit\\Howzit\\Howzit.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\27738\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\27738\\.nuget\\packages\\parse\\3.0.2\\parse.3.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}

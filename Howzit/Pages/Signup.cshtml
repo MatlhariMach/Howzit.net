@@ -1,0 +1,44 @@
+﻿@page
+@model Howzit.Pages.SignupModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="~/css/signup.css">
+</head>
+<body>
+    <div class="container">
+        <div class="signup-box">
+            <h1 class="welcome-text">Join Howzit!</h1>
+            <div class="logo">
+                <img src="~/images/mascot_icon.png" alt="Yak Icon">
+            </div>
+            <form method="post" class="signup-form">
+                <div class="form-group">
+                    <label for="Username">Username:</label>
+                    <input type="text" id="Username" name="Username" asp-for="Username" required />
+                </div>
+                <div class="form-group">
+                    <label for="Email">Email:</label>
+                    <input type="email" id="Email" name="Email" asp-for="Email" required />
+                </div>
+                <div class="form-group">
+                    <label for="Password">Password:</label>
+                    <input type="password" id="Password" name="Password" asp-for="Password" required />
+                </div>
+                <button type="submit" class="sign-up-button">Sign Up</button>
+            </form>
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <p style="color:red">@Model.ErrorMessage</p>
+            }
+
+            <p>
+                Already have an account? <a href="/Login">Log in here</a>.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

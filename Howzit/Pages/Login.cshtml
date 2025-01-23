@@ -1,0 +1,42 @@
+﻿@page
+@model Howzit.Pages.LoginModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="~/css/login.css">
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <h1 class="welcome-text">Welcome to Howzit!</h1>
+            <div class="logo">
+                <img src="~/images/mascot_icon.png" alt="Yak Icon">
+            </div>
+            <form method="post" class="login-form">
+                <div class="form-group">
+                    <label for="Username">Username:</label>
+                    <input type="text" id="Username" name="Username" asp-for="Username" required />
+                </div>
+                <div class="form-group">
+                    <label for="Password">Password:</label>
+                    <input type="password" id="Password" name="Password" asp-for="Password" required />
+                </div>
+                <button type="submit" class="sign-in-button">Sign in</button>
+            </form>
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <p style="color:red">@Model.ErrorMessage</p>
+            }
+
+            <p>
+                Don't have an account? <a href="/Signup">Sign up here</a>.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+
+

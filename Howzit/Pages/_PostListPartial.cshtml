@@ -1,0 +1,21 @@
+﻿@model List<Howzit.ParseModels.Post>
+
+
+@foreach (var post in Model)
+{
+    <div class="post-container">
+        <div class="username-view">@post.Username</div>
+        <div class="status-message">@post.StatusMessage</div>
+        <div class="vote-count">@post.VoteCount</div>
+        <div class="timestamp">@post.Timestamp</div>
+        <div class="comments">@post.Comments</div>
+
+        <div class="file">@post.PhotoFile</div>
+
+
+    </div>
+
+}
+    
+
+}

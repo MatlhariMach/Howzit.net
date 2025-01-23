@@ -1,0 +1,81 @@
+﻿@page "{latitude:double}/{longitude:double}"
+@model Howzit.Pages.PostModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a Post</title>
+    <link rel="stylesheet" href="~/css/post.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="back-button" onclick="goBack()">&larr;</div>
+            <div class="title">Create a Post</div>
+            <div class="post-info">
+                <span id="charCount" class="char-count">0/140</span>
+                <button type="submit" id="postButton" class="post-button" form="postForm" disabled>POST</button>
+            </div>
+        </header>
+
+        <main class="main">
+            <form id="postForm" method="post" enctype="multipart/form-data">
+                <textarea id="postInput" name="text" class="post-input" placeholder="Write your post..." oninput="updateCharCount()"></textarea>
+                <input type="hidden" name="latitude" value="@Model.Latitude" />
+                <input type="hidden" name="longitude" value="@Model.Longitude" />
+
+                <div id="imagePreview" class="image-preview" style="display:none;">
+                    <img id="previewImage" src="#" alt="Preview">
+                    <button type="button" class="remove-button" onclick="removeImage()">Remove</button>
+                </div>
+                <input type="file" id="fileInput" name="image" accept="image/*" style="display:none;" onchange="previewImage(event)">
+            </form>
+        </main>
+
+        <footer class="footer">
+            <label class="footer-button">
+                <img src="~/images/camera-icon.png" alt="Camera">
+                <input type="file" name="image" accept="image/*" capture="camera" onchange="previewImage(event)" style="display:none;">
+            </label>
+            <label class="footer-button">
+                <img src="~/images/gallery-icon.png" alt="Gallery">
+                <input type="file" name="image" accept="image/*" onchange="previewImage(event)" style="display:none;">
+            </label>
+        </footer>
+    </div>
+
+    <script>
+        const maxChars = 140;
+
+        function updateCharCount() {
+            const text = document.getElementById('postInput').value;
+            const charCount = `${text.length}/${maxChars}`;
+            document.getElementById('charCount').innerText = charCount;
+            document.getElementById('postButton').disabled = text.length === 0 || text.length > maxChars;
+        }
+
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const preview = document.getElementById('previewImage');
+                    preview.src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeImage() {
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('previewImage').src = '#';
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

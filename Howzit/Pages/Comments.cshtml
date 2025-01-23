@@ -1,0 +1,255 @@
+﻿@page "{postId?}"
+@model Howzit.Pages.CommentsModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details Page</title>
+    <link rel="stylesheet" href="~/css/comments.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <button class="back-button">←</button>
+        <h1 class="title">Details</h1>
+        <button class="flag-button">🚩</button>
+    </header>
+
+    @if (Model.Post == null)
+    {
+        <p class="text-danger">Post not found.</p>
+    }
+    else
+    {
+        
+    <!-- Main Post Section -->
+    <div class="post-container">
+        <div class="post-content">
+            <p>@Model.Post.StatusMessage</p>
+            @if (Model.Post.PhotoFile != null)
+            {
+                <div class="post-image mb-3 text-center">
+                    <img src="@Model.Post.PhotoFile.Url" class="img-fluid rounded" alt="Post Image" style="max-height: 300px; object-fit: cover;">
+                </div>
+            }
+           
+        </div>
+        <div class="post-vote">
+            <form method="post" asp-page-handler="Vote" class="d-flex flex-column align-items-center">
+                <input type="hidden" name="IsUpvote" value="true" />
+                <button type="submit" class="btn btn-sm btn-outline-success mb-1">▲</button>
+                <span class="fw-bold">@Model.Post.VoteCount</span>
+                <input type="hidden" name="IsUpvote" value="false" />
+                <button type="submit" class="btn btn-sm btn-outline-danger mt-1">▼</button>
+            </form>
+        </div>
+    </div>
+    
+
+    <!-- Post Info Section -->
+    <div class="post-info">
+        <span class="time">@Model.Post.GetTimeAgo()</span>
+        <span class="replies">
+            @if (Model.Post.Comments > 1)
+            {
+                <span>@Model.Post.Comments Comments</span>
+            }
+            else if (Model.Post.Comments == 1)
+            {
+                <span>1 Comment</span>
+            }
+            else
+            {
+                <span>No comments yet</span>
+            }
+        </span>
+        <!-- Edit Delete -->
+        <span class="share">
+            @if (Model.Post.User.ObjectId == Model.CurrentUser?.ObjectId)
+            {
+                <div class="d-flex justify-content-end align-items-center px-3 pb-2">
+                    <!-- Edit Button -->
+                    <button class="btn btn-sm btn-outline-primary me-2"
+                            onclick="event.preventDefault(); event.stopPropagation(); showEditForm('@Model.Post.ObjectId', '@Model.Post.StatusMessage')">
+                        ✏️ Edit
+                    </button>
+                    <!-- Delete Button -->
+                    <form method="post" asp-page-handler="Delete" onsubmit="return confirm('Are you sure you want to delete this post?')">
+                        <input type="hidden" name="commentId" value="@Model.Post.ObjectId" />
+                        <button type="submit" class="btn btn-sm btn-outline-danger">🗑️ Delete</button>
+                    </form>
+                </div>
+            }
+        </span>
+        <!-- Edit Delete -->
+    </div>
+    }
+    <!-- Comments Section -->
+    @if (Model.Comments == null || !Model.Comments.Any())
+    {
+        <p>No comments yet. Be the first to comment!</p>
+    }
+    else
+    {
+        
+    
+    <div class="comments">
+        <div class="comment">
+
+            @foreach (var comment in Model.Comments)
+            {
+                <!-- Comment text -->
+                <div class="comment-text">@comment.StatusMessage </div>
+                @if (comment.User?.ObjectId == Model.CurrentUser?.ObjectId)
+                {
+                    <div class="d-flex justify-content-end align-items-center px-3 pb-2">
+                        <!-- Edit Button -->
+                        <button class="btn btn-sm btn-outline-primary me-2"
+                                onclick="event.preventDefault(); event.stopPropagation(); showEditCommentForm('@comment.ObjectId', '@comment.StatusMessage')">
+                            ✏️ Edit
+                        </button>
+                        <!-- Delete Button -->
+                        <form method="post" asp-page-handler="Delete" onsubmit="return confirm('Are you sure you want to delete this comment?')">
+                            <input type="hidden" name="commentId" value="@comment.ObjectId" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger">🗑️ Delete</button>
+                        </form>
+
+                    </div>
+                }
+                <!-- Comment info: Time and Voting -->
+                <div class="comment-info">
+                    <span class="time">@comment.GetTimeAgo()</span>
+                    
+                    <div class="comment-vote">
+                        <form method="post" asp-page-handler="CommentVote" class="d-flex flex-column align-items-center">
+                            <input type="hidden" name="CommentId" value="@comment.ObjectId" />
+                            <input type="hidden" name="IsUpvote" value="true" />
+                            <button type="submit" class="btn btn-sm btn-outline-success mb-1">▲</button>
+
+                        </form>
+                        <span class="fw-bold">@comment.Vote</span>
+
+                        <form method="post" asp-page-handler="CommentVote" class="d-flex flex-column align-items-center">
+                            <input type="hidden" name="CommentId" value="@comment.ObjectId" />
+                            <input type="hidden" name="IsDwnvote" value="true" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger mt-1">▼</button>
+                        </form>
+                    </div>
+                </div>
+
+                <hr>
+            }        
+           
+        </div>
+    </div>
+
+    <!-- Comment Input Section -->
+    }
+    <div class="comment-input-container">
+        <form method="post" asp-page-handler="AddComment" style="width: 100%; display: flex;">
+            <input type="hidden" name="postId" value="@Model.Post?.ObjectId" />
+            <textarea name="CommentText" class="comment-input" placeholder="Write your comment here..."   required></textarea>
+            <button type="submit" class="send-button">Send</button>
+        </form>
+    </div>
+    
+    <script>
+        function confirmDelete(commentId) {
+            if (confirm("Are you sure you want to delete this post?")) {
+                const form = document.createElement('form');
+                form.method = 'post';
+                form.action = `?handler=Delete`;
+
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'commentId';
+                input.value = commentId;
+
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        function showEditCommentForm(commentId, currentContent) {
+            document.getElementById('editCommentId').value = commentId;
+            document.getElementById('editCommentContent').value = currentContent;
+            new bootstrap.Modal(document.getElementById('editCommentModal')).show();
+        }
+
+
+
+        //post
+        function confirmDelete(postId) {
+            if (confirm("Are you sure you want to delete this post?")) {
+                const form = document.createElement('form');
+                form.method = 'post';
+                form.action = `?handler=Delete`;
+
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'postId';
+                input.value = postId;
+
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        function showEditForm(postId, currentContent) {
+            document.getElementById('editPostId').value = postId;
+            document.getElementById('editPostContent').value = currentContent;
+            new bootstrap.Modal(document.getElementById('editModal')).show();
+        }
+
+    </script>
+
+    <div id="editModal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Post</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" asp-page-handler="Edit">
+                    <div class="modal-body">
+                        <input type="hidden" id="editPostId" name="postId" />
+                        <textarea id="editPostContent" name="statusMessage" class="form-control" rows="4"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="editCommentModal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Comment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" asp-page-handler="EditComment">
+                    <div class="modal-body">
+                        <input type="hidden" id="editCommentId" name="commentId" />
+                        <textarea id="editCommentContent" name="statusMessage" class="form-control" rows="4"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+
